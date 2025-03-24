@@ -1,0 +1,91 @@
+0: Person
+1: Bicycle
+2: Car
+3: Motorcycle
+4: Airplane
+5: Bus
+6: Train
+7: Truck
+8: Boat
+9: Traffic light
+10: Fire hydrant
+11: Stop sign
+12: Parking meter
+13: Bench
+14: Bird
+15: Cat
+16: Dog
+17: Horse
+18: Sheep
+19: Cow
+20: Elephant
+21: Bear
+22: Zebra
+23: Giraffe
+24: Backpack
+25: Umbrella
+26: Handbag
+27: Tie
+28: Suitcase
+29: Frisbee
+30: Skis
+31: Snowboard
+32: Sports ball
+33: Kite
+34: Baseball bat
+35: Baseball glove
+36: Skateboard
+37: Surfboard
+38: Tennis racket
+39: Bottle
+40: Wine glass
+41: Cup
+42: Fork
+43: Knife
+44: Spoon
+45: Bowl
+46: Banana
+47: Apple
+48: Sandwich
+49: Orange
+50: Broccoli
+51: Carrot
+52: Hot dog
+53: Pizza
+54: Donut
+55: Cake
+56: Chair
+57: Couch
+58: Potted plant
+59: Bed
+60: Dining table
+61: Toilet
+62: TV
+63: Laptop
+64: Mouse
+65: Remote
+66: Keyboard
+67: Cell phone
+68: Microwave
+69: Oven
+70: Toaster
+71: Sink
+72: Refrigerator
+73: Book
+74: Clock
+75: Vase
+76: Scissors
+77: Teddy bear
+78: Hair drier
+79: Toothbrush
+ object_image = frame[int(y_min):int(y_max), int(x_min):int(x_max)]
+                if object_image.size > 0:
+                    resized_object = cv2.resize(object_image, (50, 50))
+                    if len(tracked_paths[class_id]) > 1:
+                        last_point = tracked_paths[class_id][-1]
+                        y_offset, x_offset = last_point[1] - 25, last_point[0] - 25
+                        y1, y2 = max(0, y_offset), min(frame_height, y_offset + 50)
+                        x1, x2 = max(0, x_offset), min(frame_width, x_offset + 50)
+                        overlay = path_canvas[y1:y2, x1:x2]
+                        blended = cv2.addWeighted(overlay, 0.5, resized_object[:y2-y1, :x2-x1], 0.5, 0)
+                        path_canvas[y1:y2, x1:x2] = blended

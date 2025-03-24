@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object Tracking Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .video-container, .controls-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .video-container img {
+            width: 100%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .controls-container form, .controls-container button {
+            margin-top: 1rem;
+        }
+
+        .controls-container label {
+            font-weight: bold;
+        }
+
+        .controls-container input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .controls-container button {
+            padding: 0.7rem 1.2rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1rem;
+            margin-right: 10px;
+        }
+
+        .controls-container button:hover {
+            background-color: #0056b3;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Object Tracking Dashboard</h1>
+    </header>
+    <main>
+        <div class="video-container">
+            <h2>Live Video Feed</h2>
+            <img src="{{ url_for('video_feed') }}" id="video-feed" alt="Live Video Feed">
+        </div>
+        <div class="controls-container">
+            <h2>Controls</h2>
+            <form id="classFilterForm">
+                <label for="classes">Classes to Track (Comma-separated):</label>
+                <input type="text" id="classes" name="classes" placeholder="e.g., 1, 2, 3">
+                <div>
+                    <button type="button" onclick="updateClasses()">Update Classes</button>
+                    <button type="button" onclick="refreshDetection()">Refresh</button>
+                </div>
+            </form>
+            <button onclick="savePaths()">Save Tracked Paths</button>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Object Tracking App</p>
+    </footer>
+
+    <script>
+        // Update classes to track
+        async function updateClasses() {
+            const classes = document.getElementById("classes").value.split(',').map(c => parseInt(c.trim()));
+            const response = await fetch('/set_classes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ classes })
+            });
+            const result = await response.json();
+            alert(result.status);
+        }
+
+        // Refresh detection system
+        async function refreshDetection() {
+            const response = await fetch('/set_classes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ classes: [] })  // Reset to detect all classes
+            });
+            const result = await response.json();
+            alert("Detection refreshed: " + result.status);
+        }
+
+        // Save tracked paths
+        async function savePaths() {
+            const response = await fetch('/save_paths');
+            const result = await response.json();
+            alert(result.status);
+        }
+    </script>
+</body>
+</html>
